@@ -11,12 +11,14 @@ breed [diamonds diamond]
 breed [dirt]
 breed [blast]
 
-globals       [ score nb-to-collect countdown ]
+turtles-own [ destructible? ]
+
+globals       [ score nb-to-collect countdown]
 heros-own     [ moving? orders ]
 diamonds-own  [ moving? ]
 monsters-own  [ moving? right-handed? ]
 rocks-own     [ moving? ]
-walls-own     [ destructible? ]
+walls-own     [ ]
 doors-own     [ open? ]
 blast-own     [ strength diamond-maker? ]
 
