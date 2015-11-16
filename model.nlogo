@@ -103,6 +103,7 @@ end
 to init-hero
   ioda:init-agent
   set heading 0
+  set destructible? true
   set color red
   set moving? false
   set orders []
@@ -111,6 +112,7 @@ end
 to init-door
   ioda:init-agent
   set heading 0
+  set destructible? false
   set color blue - 4
   set shape "tile brick"
   set open? false
@@ -120,6 +122,7 @@ end
 to init-monster
   ioda:init-agent
   set heading 90 * random 4
+  set destructible? true
   set color one-of (list blue yellow orange pink lime)
   set moving? true
   set right-handed? (random 2 = 0)
@@ -129,12 +132,14 @@ end
 to init-rock
   ioda:init-agent
   set color gray + 2
+  set destructible? true
   set heading random 360
   set moving? false
 end
 
 to init-diamond
   ioda:init-agent
+  set destructible? false
   set color cyan
   set heading 180
   set moving? false
@@ -142,6 +147,7 @@ end
 
 to init-blast [ dm? ]
   ioda:init-agent
+  set destructible? false
   set color orange
   set strength 3
   set diamond-maker? dm?
@@ -149,6 +155,7 @@ end
 
 to init-dirt
   ioda:init-agent
+  set destructible? false
   set color brown + 3
 end
 
