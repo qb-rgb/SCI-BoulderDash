@@ -299,6 +299,12 @@ to rocks::move-down
 end
 
 to rocks::create-blast
+   let dm? ifelse-value ([breed] of ioda:my-target = monsters) [ [right-handed?] of ioda:my-target ] [ true ]
+   if not (([breed] of ioda:my-target) = walls) [
+     hatch-blast 1 [ init-blast dm? ]
+   ]
+end
+
 to-report rocks::is-destructible?
   report default::is-destructible?
 end
