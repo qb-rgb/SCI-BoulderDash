@@ -65,6 +65,7 @@ parallel interaction ReadOrders
 end
 
 exclusive interaction Explode
+  trigger           target:is-destructible?
   condition	     moving?
   actions 	     create-blast target:die die
 end

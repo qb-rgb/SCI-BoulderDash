@@ -11,12 +11,14 @@ breed [diamonds diamond]
 breed [dirt]
 breed [blast]
 
-globals       [ score nb-to-collect countdown ]
+turtles-own [ destructible? ]
+
+globals       [ score nb-to-collect countdown]
 heros-own     [ moving? orders ]
 diamonds-own  [ moving? ]
 monsters-own  [ moving? right-handed? ]
 rocks-own     [ moving? ]
-walls-own     [ destructible? ]
+walls-own     [ ]
 doors-own     [ open? ]
 blast-own     [ strength diamond-maker? ]
 
@@ -101,6 +103,7 @@ end
 to init-hero
   ioda:init-agent
   set heading 0
+  set destructible? true
   set color red
   set moving? false
   set orders []
@@ -109,6 +112,7 @@ end
 to init-door
   ioda:init-agent
   set heading 0
+  set destructible? false
   set color blue - 4
   set shape "tile brick"
   set open? false
@@ -118,6 +122,7 @@ end
 to init-monster
   ioda:init-agent
   set heading 90 * random 4
+  set destructible? true
   set color one-of (list blue yellow orange pink lime)
   set moving? true
   set right-handed? (random 2 = 0)
@@ -127,12 +132,14 @@ end
 to init-rock
   ioda:init-agent
   set color gray + 2
+  set destructible? true
   set heading random 360
   set moving? false
 end
 
 to init-diamond
   ioda:init-agent
+  set destructible? false
   set color cyan
   set heading 180
   set moving? false
@@ -140,6 +147,7 @@ end
 
 to init-blast [ dm? ]
   ioda:init-agent
+  set destructible? false
   set color orange
   set strength 3
   set diamond-maker? dm?
@@ -147,6 +155,7 @@ end
 
 to init-dirt
   ioda:init-agent
+  set destructible? false
   set color brown + 3
 end
 
@@ -191,6 +200,10 @@ end
 
 to default::move-forward
   move-to patch-ahead 1
+end
+
+to-report default::is-destructible?
+  report destructible?
 end
 
 ; doors-related primitives
@@ -249,6 +262,10 @@ to diamonds::create-blast
   hatch-blast 1 [ init-blast dm? ]
 end
 
+to-report diamonds::is-destructible?
+  report default::is-destructible?
+end
+
 to diamonds::die
   ioda:die
 end
@@ -282,8 +299,14 @@ to rocks::move-down
 end
 
 to rocks::create-blast
-  let dm? ifelse-value ([breed] of ioda:my-target = monsters) [ [right-handed?] of ioda:my-target ] [ true ]
-  hatch-blast 1 [ init-blast dm? ]
+   let dm? ifelse-value ([breed] of ioda:my-target = monsters) [ [right-handed?] of ioda:my-target ] [ true ]
+   if not (([breed] of ioda:my-target) = walls) [
+     hatch-blast 1 [ init-blast dm? ]
+   ]
+end
+
+to-report rocks::is-destructible?
+  report default::is-destructible?
 end
 
 to rocks::die
@@ -316,6 +339,10 @@ to monsters::turn-right-or-left
     [ left 90 ]
 end
 
+to-report monsters::is-destructible?
+  report default::is-destructible?
+end
+
 to monsters::die
   ioda:die
 end
@@ -326,6 +353,11 @@ to monsters::create-blast
 end
 
 ; dirt-related primitives
+
+
+to-report dirt::is-destructible?
+  report default::is-destructible?
+end
 
 to dirt::die
   ioda:die
@@ -377,6 +409,10 @@ to heros::stop-moving
   set moving? false
 end
 
+to-report heros::is-destructible?
+  report default::is-destructible?
+end
+
 to heros::die
   set countdown 10
   ioda:die
@@ -393,6 +429,19 @@ end
 to heros::increase-score
   set score score + 1
   set nb-to-collect nb-to-collect - 1
+end
+
+
+; Walls
+
+to-report walls::is-destructible?
+  report default::is-destructible?
+end
+
+to walls::die
+  if destructible? [
+    ioda:die
+  ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
