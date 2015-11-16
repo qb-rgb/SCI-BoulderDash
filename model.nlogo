@@ -202,6 +202,10 @@ to default::move-forward
   move-to patch-ahead 1
 end
 
+to-report default::is-destructible?
+  report destructible?
+end
+
 ; doors-related primitives
 
 to-report doors::open?
