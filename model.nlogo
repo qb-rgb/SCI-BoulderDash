@@ -262,6 +262,10 @@ to diamonds::create-blast
   hatch-blast 1 [ init-blast dm? ]
 end
 
+to-report diamonds::is-destructible?
+  report default::is-destructible?
+end
+
 to diamonds::die
   ioda:die
 end
@@ -295,8 +299,8 @@ to rocks::move-down
 end
 
 to rocks::create-blast
-  let dm? ifelse-value ([breed] of ioda:my-target = monsters) [ [right-handed?] of ioda:my-target ] [ true ]
-  hatch-blast 1 [ init-blast dm? ]
+to-report rocks::is-destructible?
+  report default::is-destructible?
 end
 
 to rocks::die
@@ -329,6 +333,10 @@ to monsters::turn-right-or-left
     [ left 90 ]
 end
 
+to-report monsters::is-destructible?
+  report default::is-destructible?
+end
+
 to monsters::die
   ioda:die
 end
@@ -339,6 +347,11 @@ to monsters::create-blast
 end
 
 ; dirt-related primitives
+
+
+to-report dirt::is-destructible?
+  report default::is-destructible?
+end
 
 to dirt::die
   ioda:die
@@ -388,6 +401,10 @@ end
 
 to heros::stop-moving
   set moving? false
+end
+
+to-report heros::is-destructible?
+  report default::is-destructible?
 end
 
 to heros::die
