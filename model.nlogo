@@ -430,6 +430,19 @@ to heros::increase-score
   set score score + 1
   set nb-to-collect nb-to-collect - 1
 end
+
+
+; Walls
+
+to-report walls::is-destructible?
+  report default::is-destructible?
+end
+
+to walls::die
+  if destructible? [
+    ioda:die
+  ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 482
