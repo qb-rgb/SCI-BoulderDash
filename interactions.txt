@@ -90,3 +90,8 @@ parallel interaction Collect
   condition 	     moving?
   actions	     target:die increase-score move-forward
 end
+
+parallel interaction Propagate
+  condition    is-alive?
+  actions      propagate
+end

@@ -13,7 +13,7 @@ breed [blast]
 
 turtles-own [ destructible? ]
 
-globals       [ score nb-to-collect countdown]
+globals       [ score nb-to-collect countdown ]
 heros-own     [ moving? orders ]
 diamonds-own  [ moving? ]
 monsters-own  [ moving? right-handed? ]
@@ -145,11 +145,11 @@ to init-diamond
   set moving? false
 end
 
-to init-blast [ dm? ]
+to init-blast [ dm? init-strength ]
   ioda:init-agent
   set destructible? false
   set color orange
-  set strength 3
+  set strength init-strength
   set diamond-maker? dm?
 end
 
@@ -259,7 +259,7 @@ end
 
 to diamonds::create-blast
   let dm? ifelse-value ([breed] of ioda:my-target = monsters) [ [right-handed?] of ioda:my-target ] [ true ]
-  hatch-blast 1 [ init-blast dm? ]
+  hatch-blast 1 [ init-blast dm? blast-strength ]
 end
 
 to-report diamonds::is-destructible?
@@ -304,16 +304,22 @@ end
 
 to-report rocks::nothing-left-down?
   face patch-at -1 -1
-  ifelse (first [breed] of turtles-at -1 -1 = heros)
+  ifelse any? turtles-at -1 -1 [
+    ifelse (first [breed] of turtles-at -1 -1 = heros)
+      [report true]
+      [report default::nothing-ahead? 1]
+    ]
     [report true]
-    [report default::nothing-ahead? 1]
 end
 
 to-report rocks::nothing-right-down?
   face patch-at 1 -1
-  ifelse (first [breed] of turtles-at 1 -1 = heros)
+  ifelse any? turtles-at 1 -1 [
+    ifelse (first [breed] of turtles-at 1 -1 = heros)
+      [report true]
+      [report default::nothing-ahead? 1]
+    ]
     [report true]
-    [report default::nothing-ahead? 1]
 end
 
 to rocks::start-moving
@@ -347,7 +353,7 @@ end
 
 to rocks::create-blast
    let dm? ifelse-value ([breed] of ioda:my-target = monsters) [ [right-handed?] of ioda:my-target ] [ true ]
-   hatch-blast 1 [ init-blast dm? ]
+   hatch-blast 1 [ init-blast dm? blast-strength ]
 end
 
 to-report rocks::is-destructible?
@@ -394,7 +400,7 @@ end
 
 to monsters::create-blast
   let dm? ifelse-value ([breed] of ioda:my-target = heros) [ true ] [ right-handed? ]
-  hatch-blast 1 [ init-blast dm? ]
+  hatch-blast 1 [ init-blast dm? blast-strength ]
 end
 
 ; dirt-related primitives
@@ -468,7 +474,7 @@ to heros::move-forward
 end
 
 to heros::create-blast
-  hatch-blast 1 [ init-blast true ]
+  hatch-blast 1 [ init-blast true blast-strength ]
 end
 
 to heros::increase-score
@@ -488,12 +494,38 @@ to walls::die
     ioda:die
   ]
 end
+
+; Blast
+
+to blast::propagate
+  set strength strength - 1
+  let new-strength strength
+  ask neighbors [
+    if not any? blast-here [
+      if any? turtles-here [
+        ask turtles-here [
+          if destructible? [ioda:die]
+        ]
+      ]
+      sprout-blast 1 [init-blast true new-strength]
+    ]
+  ]
+  set hidden? true
+end
+
+to-report blast::is-alive?
+  if strength <= 0 [
+    ioda:die
+    report false
+  ]
+  report true
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 566
 10
-1070
-535
+1066
+531
 -1
 -1
 19.76
@@ -703,6 +735,21 @@ step-by-step?
 0
 1
 -1000
+
+SLIDER
+269
+168
+441
+201
+blast-strength
+blast-strength
+2
+5
+3
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
