@@ -30,14 +30,14 @@ diamonds	Explode 	 50 	monsters	 1
 diamonds	Explode 	 50 	heros		 1
 
 rocks		StartFalling	 0 	UPDATE
-rocks		Fall 		 0 
-rocks		StopFalling 	 10 	walls		 1 	
-rocks		StopFalling 	 10 	dirt		 1 	
-rocks		StopFalling 	 10 	diamonds 	 1 
-rocks		StopFalling 	 10 	rocks		 1 
-rocks		StopFalling 	 10 	doors		 1 
-rocks		Explode 	 50 	monsters	 1 
-rocks		Explode 	 50 	heros		 1 
+rocks		Fall 		 0
+rocks		StopFalling 	 10 	walls		 1
+rocks		StopFalling 	 10 	dirt		 1
+rocks		StopFalling 	 10 	diamonds 	 1
+rocks		StopFalling 	 10 	rocks		 1
+rocks		StopFalling 	 10 	doors		 1
+rocks		Explode 	 50 	monsters	 1
+rocks		Explode 	 50 	heros		 1
 rocks		Explode		 100	walls		 1
 
 monsters	Advance		 10
@@ -52,6 +52,7 @@ monsters	Explode		 30 	heros		 1
 heros		StopMoving	 100 	UPDATE
 heros		ReadOrders	 90 	UPDATE
 heros		Advance		 10
+heros		Push		   10    rocks	 1
 heros		Dig		 20 	dirt		 1
 heros		Collect		 80    	diamonds	 1
 heros		Explode		 100    monsters	 0

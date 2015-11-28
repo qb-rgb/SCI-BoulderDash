@@ -20,7 +20,7 @@ parallel interaction Open
   condition	     closed?
   actions	     change-state
 end
-	 
+
 parallel interaction StartFalling
   trigger	     nothing-below?
   condition	     not:moving?
@@ -33,13 +33,18 @@ parallel interaction Fall
 end
 
 parallel interaction StopFalling
-  condition	     moving? 
+  condition	     moving?
   actions	     stop-moving
 end
 
 parallel interaction Advance
   condition 	     nothing-ahead? moving?
   actions	     move-forward
+end
+
+parallel interaction Push
+  condition         target-ahead?  moving?  target:nothing-ahead? not:target:moving?
+  actions           move-forward target:move-forward
 end
 
 parallel interaction Turn
@@ -49,7 +54,7 @@ end
 
 parallel interaction Dig
   trigger	     target-ahead?
-  condition	     moving? 
+  condition	     moving?
   actions	     target:die move-forward
 end
 
@@ -75,4 +80,3 @@ parallel interaction Collect
   condition 	     moving?
   actions	     target:die increase-score move-forward
 end
-

@@ -286,6 +286,12 @@ to-report rocks::moving?
   report default::moving?
 end
 
+to-report rocks::nothing-ahead?
+  face ioda:my-target
+  left 180
+  report default::nothing-ahead? 1
+end
+
 to rocks::start-moving
   default::start-moving
 end
@@ -296,6 +302,10 @@ end
 
 to rocks::move-down
   default::move-down
+end
+
+to rocks::move-forward
+  default::move-forward
 end
 
 to rocks::create-blast
@@ -448,10 +458,10 @@ GRAPHICS-WINDOW
 482
 10
 727
-191
+206
 -1
 -1
-30.0
+33.0
 1
 10
 1
