@@ -292,6 +292,30 @@ to-report rocks::nothing-ahead?
   report default::nothing-ahead? 1
 end
 
+to-report rocks::nothing-left?
+  face patch-at -1 0
+  report default::nothing-ahead? 1
+end
+
+to-report rocks::nothing-right?
+  face patch-at 1 0
+  report default::nothing-ahead? 1
+end
+
+to-report rocks::nothing-left-down?
+  face patch-at -1 -1
+  ifelse (first [breed] of turtles-at -1 -1 = heros)
+    [report true]
+    [report default::nothing-ahead? 1]
+end
+
+to-report rocks::nothing-right-down?
+  face patch-at 1 -1
+  ifelse (first [breed] of turtles-at 1 -1 = heros)
+    [report true]
+    [report default::nothing-ahead? 1]
+end
+
 to rocks::start-moving
   default::start-moving
 end
@@ -304,15 +328,26 @@ to rocks::move-down
   default::move-down
 end
 
+
 to rocks::move-forward
   default::move-forward
 end
 
+to rocks::roll-left
+  face patch-at -1 0
+  rocks::start-moving
+  rocks::move-forward
+end
+
+to rocks::roll-right
+  face patch-at 1 0
+  rocks::start-moving
+  rocks::move-forward
+end
+
 to rocks::create-blast
    let dm? ifelse-value ([breed] of ioda:my-target = monsters) [ [right-handed?] of ioda:my-target ] [ true ]
-   if not (([breed] of ioda:my-target) = walls) [
-     hatch-blast 1 [ init-blast dm? ]
-   ]
+   hatch-blast 1 [ init-blast dm? ]
 end
 
 to-report rocks::is-destructible?
@@ -455,13 +490,13 @@ to walls::die
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-482
+566
 10
-727
-206
+1070
+535
 -1
 -1
-33.0
+19.76
 1
 10
 1
@@ -472,8 +507,8 @@ GRAPHICS-WINDOW
 0
 1
 0
-4
--4
+24
+-24
 0
 1
 1
@@ -645,7 +680,7 @@ CHOOSER
 level
 level
 "level0" "level1" "level2"
-0
+1
 
 MONITOR
 287

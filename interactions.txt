@@ -32,6 +32,16 @@ parallel interaction Fall
   actions	     move-down
 end
 
+parallel interaction RollLeft
+  condition	     not:moving? nothing-left? nothing-left-down?
+  actions	       roll-left
+end
+
+parallel interaction RollRight
+  condition	     not:moving? nothing-right? nothing-right-down?
+  actions	       roll-right
+end
+
 parallel interaction StopFalling
   condition	     moving?
   actions	     stop-moving
