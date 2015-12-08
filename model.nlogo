@@ -3,6 +3,7 @@ __includes ["IODA_2_3.nls"]
 extensions [ioda]
 
 breed [walls wall]
+breed [magicwalls magicwall]
 breed [heros hero]
 breed [monsters monster]
 breed [doors door]
