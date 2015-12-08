@@ -1,6 +1,8 @@
-[10 5]
+[10 7]
 XXXXXXXXXX
 XH....RD.X
 X..... ..X
 X.....m..O
+X..... ..X
+X........X
 XXXXXXXXXX
