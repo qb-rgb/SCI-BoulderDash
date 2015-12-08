@@ -18,7 +18,7 @@ globals       [ score nb-to-collect countdown ]
 heros-own     [ moving? orders ]
 diamonds-own  [ moving? ]
 monsters-own  [ moving? right-handed? ]
-rocks-own     [ moving? ]
+rocks-own     [ moving?]
 walls-own     [ ]
 doors-own     [ open? ]
 blast-own     [ strength diamond-maker? ]
@@ -65,7 +65,7 @@ to create-agent [ char ]
     [ ifelse (char = "x")
         [ sprout-walls 1 [ init-wall true ] ]
         [ ifelse (char = "m")
-          [sprout-magicwalls 1 [init-magicwall true ] ]
+          [sprout-magicwalls 1 [init-magicwall ] ]
           [ ifelse (char = "O")
             [ sprout-doors 1 [ init-door ]]
             [ ifelse (char = "H")
@@ -164,9 +164,9 @@ to init-dirt
   set color brown + 3
 end
 
-to init-magicwall [ d ]
+to init-magicwall
   ioda:init-agent
-  set destructible? d
+  set destructible? true
   set heading 0
   set color blue - 4
 end
@@ -370,6 +370,21 @@ to-report rocks::is-destructible?
   report default::is-destructible?
 end
 
+to-report rocks::is-in-magicwall?
+  report any? magicwalls-here
+end
+
+to rocks::transform-in-diam
+  ioda:die
+  ask patch-here [
+    sprout-diamonds 1 [init-diamond]
+    ask diamonds-here [
+      set moving? true
+      diamonds::move-down
+    ]
+  ]
+end
+
 to rocks::die
   ioda:die
 end
@@ -512,11 +527,8 @@ to-report magicwalls::is-destructible?
 end
 
 to magicwalls::die
-  if destructible? [
+  ask ioda:my-target [
     ioda:die
-    ask patch-here [
-      sprout-diamonds 1 [init-diamond]
-    ]
   ]
 end
 
