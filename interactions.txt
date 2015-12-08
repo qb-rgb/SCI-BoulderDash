@@ -95,3 +95,8 @@ parallel interaction Propagate
   condition    is-alive?
   actions      propagate
 end
+
+parallel interaction DiamTransform
+  condition	is-in-magicwall?
+  actions	transform-in-diam
+end
