@@ -1,6 +1,6 @@
-[5 5]
-XXXXX
-XHRDX
-X...X
-X.y.O
-XXXXX
+[10 5]
+XXXXXXXXXX
+XH....RD.X
+X..... ..X
+X.....m..O
+XXXXXXXXXX
