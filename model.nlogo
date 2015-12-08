@@ -64,25 +64,28 @@ to create-agent [ char ]
     [ sprout-walls 1 [ init-wall false ] ]
     [ ifelse (char = "x")
         [ sprout-walls 1 [ init-wall true ] ]
-        [ ifelse (char = "O")
+        [ ifelse (char = "m")
+          [sprout-magicwalls 1 [init-magicwall true ] ]
+          [ ifelse (char = "O")
             [ sprout-doors 1 [ init-door ]]
             [ ifelse (char = "H")
-                [ sprout-heros 1 [ init-hero ]]
-                [ ifelse (char = "D")
-                    [ sprout-diamonds 1 [ init-diamond ]]
-                    [ ifelse (char = "R")
-                        [ sprout-rocks 1 [ init-rock ]]
-                        [ ifelse (char = "M")
-                            [ sprout-monsters 1 [ init-monster ]]
-                            [ ifelse (char = ".")
-                                [ sprout-dirt 1 [ init-dirt ] ]
-                                [ ;;;;;; other agents ?
-                                ]
-                            ]
-                        ]
+              [ sprout-heros 1 [ init-hero ]]
+              [ ifelse (char = "D")
+                [ sprout-diamonds 1 [ init-diamond ]]
+                [ ifelse (char = "R")
+                  [ sprout-rocks 1 [ init-rock ]]
+                  [ ifelse (char = "M")
+                    [ sprout-monsters 1 [ init-monster ]]
+                    [ ifelse (char = ".")
+                      [ sprout-dirt 1 [ init-dirt ] ]
+                      [ ;;;;;; other agents ?
+                      ]
                     ]
+                  ]
                 ]
+              ]
             ]
+          ]
         ]
     ]
 end
@@ -160,14 +163,19 @@ to init-dirt
   set color brown + 3
 end
 
-to init-wall [ d ]
+to init-magicwall [ d ]
   ioda:init-agent
   set destructible? d
   set heading 0
   set color blue - 4
 end
 
-
+to init-wall [ d ]
+  ioda:init-agent
+  set destructible? d
+  set heading 0
+  set color blue - 4
+end
 
 ; primitives that are shared by several breeds
 
