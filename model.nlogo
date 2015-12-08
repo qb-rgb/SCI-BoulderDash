@@ -92,6 +92,7 @@ end
 
 to init-world
   set-default-shape walls "tile brick"
+  set-default-shape magicwalls "tile brick"
   set-default-shape heros "person"
   set-default-shape monsters "ghost"
   set-default-shape doors "door-open"
@@ -735,8 +736,8 @@ CHOOSER
 108
 level
 level
-"level0" "level1" "level2"
-1
+"level0" "level1" "level2" "level3"
+3
 
 MONITOR
 287
