@@ -504,6 +504,21 @@ to walls::die
   ]
 end
 
+; magicwalls
+
+to-report magicwalls::is-destructible?
+  report default::is-destructible?
+end
+
+to magicwalls::die
+  if destructible? [
+    ioda:die
+    ask patch-here [
+      sprout-diamonds 1 [init-diamond]
+    ]
+  ]
+end
+
 ; Blast
 
 to blast::propagate
