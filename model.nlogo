@@ -10,6 +10,7 @@ breed [doors door]
 breed [rocks rock]
 breed [diamonds diamond]
 breed [dirt]
+breed [explosive]
 breed [blast]
 
 turtles-own [ destructible? ]
@@ -20,8 +21,10 @@ diamonds-own  [ moving? ]
 monsters-own  [ moving? right-handed? ]
 rocks-own     [ moving?]
 walls-own     [ ]
+magicwalls-own [ ]
 doors-own     [ open? ]
 blast-own     [ strength diamond-maker? ]
+explosive-own [ limit-before-explosion ]
 
 to setup
   clear-all
@@ -100,6 +103,7 @@ to init-world
   set-default-shape diamonds "diamond"
   set-default-shape dirt "dirt"
   set-default-shape blast "star"
+  set-default-shape explosive "triangle"
   read-level (word "levels/" level ".txt")
   set countdown 0
   set nb-to-collect count diamonds
@@ -176,6 +180,11 @@ to init-wall [ d ]
   set destructible? d
   set heading 0
   set color blue - 4
+end
+
+to init-explosive
+  ioda:init-agent
+  set limit-before-explosion limit-explosion
 end
 
 ; primitives that are shared by several breeds
@@ -447,6 +456,12 @@ to send-message [ value ]
   set orders lput value orders
 end
 
+to heros::put-explosive
+  ask patch-here [
+    sprout-explosive 1 [init-explosive]
+  ]
+end
+
 to heros::filter-neighbors
   ioda:filter-neighbors-in-radius halo-of-hero
 end
@@ -474,9 +489,16 @@ end
 to heros::handle-messages
   foreach orders
     [ let m ?
-      ifelse (m = "STOP")
-        [ set moving? false]
-        [ set heading m set moving? true ]
+      ifelse (m = "EXPLOSIVE")
+        [ ask patch-here [
+            sprout-explosive 1 [init-explosive]
+        ]
+        ]
+        [
+          ifelse (m = "STOP")
+          [ set moving? false]
+          [ set heading m set moving? true ]
+        ]
     ]
   set orders []
 end
@@ -557,15 +579,38 @@ to-report blast::is-alive?
   ]
   report true
 end
+
+; Explosive
+
+to-report explosive::can-explose?
+  report limit-before-explosion <= 0
+end
+
+to explosive::update-shape
+  ifelse shape = "triangle" [
+    set shape "triangle 2"
+  ]
+  [
+    set shape "triangle"
+  ]
+  set limit-before-explosion (limit-before-explosion - 1)
+end
+
+to explosive::explose
+  ioda:die
+  ask patch-here [
+    sprout-blast 1 [init-blast true blast-strength]
+  ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 566
 10
-1066
-531
+936
+293
 -1
 -1
-19.76
+36.0
 1
 10
 1
@@ -576,8 +621,8 @@ GRAPHICS-WINDOW
 0
 1
 0
-24
--24
+9
+-6
 0
 1
 1
@@ -787,6 +832,38 @@ blast-strength
 1
 NIL
 HORIZONTAL
+
+SLIDER
+268
+224
+440
+257
+limit-explosion
+limit-explosion
+3
+7
+3
+1
+1
+NIL
+HORIZONTAL
+
+BUTTON
+257
+504
+322
+537
+BOOM
+ask heros [ send-message \"EXPLOSIVE\" ]
+NIL
+1
+T
+OBSERVER
+NIL
+E
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
