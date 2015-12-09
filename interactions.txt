@@ -100,3 +100,12 @@ parallel interaction DiamTransform
   condition	is-in-magicwall?
   actions	transform-in-diam
 end
+
+parallel interaction Explose
+  condition	can-explose?
+  actions	explose
+end
+
+parallel interaction UpdateExplosive
+  actions	update-shape
+end
