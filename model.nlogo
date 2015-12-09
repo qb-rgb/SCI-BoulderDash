@@ -840,10 +840,10 @@ SLIDER
 257
 limit-explosion
 limit-explosion
-3
-7
-3
-1
+45
+90
+45
+5
 1
 NIL
 HORIZONTAL
