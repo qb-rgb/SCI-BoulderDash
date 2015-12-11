@@ -65,3 +65,5 @@ blast   	Propagate    	 0      UPDATE
 
 explosive	Explose		 0	UPDATE
 explosive	UpdateExplosive	 0	UPDATE
+
+amoebes		Expense		 50

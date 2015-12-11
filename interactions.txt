@@ -109,3 +109,7 @@ end
 parallel interaction UpdateExplosive
   actions	update-shape
 end
+
+parallel interaction Expense
+  actions	expense
+end

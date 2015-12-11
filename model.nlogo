@@ -12,10 +12,11 @@ breed [diamonds diamond]
 breed [dirt]
 breed [explosive]
 breed [blast]
+breed [amoebes amoebe]
 
 turtles-own [ destructible? ]
 
-globals       [ score nb-to-collect countdown ]
+globals       [ score nb-to-collect countdown total-nb-of-amoebes current-number-of-amoebes ]
 heros-own     [ moving? orders ]
 diamonds-own  [ moving? ]
 monsters-own  [ moving? right-handed? ]
@@ -37,6 +38,7 @@ to setup
 end
 
 to go
+  set current-number-of-amoebes 0
   ioda:go
   tick
   ifelse (not any? heros)
@@ -81,7 +83,10 @@ to create-agent [ char ]
                     [ sprout-monsters 1 [ init-monster ]]
                     [ ifelse (char = ".")
                       [ sprout-dirt 1 [ init-dirt ] ]
-                      [ ;;;;;; other agents ?
+                      [ ifelse (char = "A")
+                        [ sprout-amoebes 1 [ init-amoebe ] ]
+                        [
+                        ]
                       ]
                     ]
                   ]
@@ -104,9 +109,12 @@ to init-world
   set-default-shape dirt "dirt"
   set-default-shape blast "star"
   set-default-shape explosive "triangle"
+  set-default-shape amoebes "bug"
   read-level (word "levels/" level ".txt")
   set countdown 0
   set nb-to-collect count diamonds
+  set total-nb-of-amoebes 0
+  set current-number-of-amoebes 0
 end
 
 to init-hero
@@ -185,6 +193,10 @@ end
 to init-explosive
   ioda:init-agent
   set limit-before-explosion limit-explosion
+end
+
+to init-amoebe
+  ioda:init-agent
 end
 
 ; primitives that are shared by several breeds
@@ -602,12 +614,41 @@ to explosive::explose
     sprout-blast 1 [init-blast true blast-strength]
   ]
 end
+
+; Amoebe
+
+to amoebes::expense
+  let add-number-of-amoebes 0
+  ask neighbors [
+    if not any? turtles-here [
+      sprout-amoebes 1 [init-amoebe]
+      set add-number-of-amoebes (add-number-of-amoebes + 1)
+    ]
+  ]
+  set total-nb-of-amoebes (total-nb-of-amoebes + add-number-of-amoebes)
+  if current-number-of-amoebes = total-nb-of-amoebes [
+     ask amoebes [
+       ioda:die
+       ask patch-here [
+         sprout-diamonds 1 [init-diamond]
+       ]
+     ]
+  ]
+  set current-number-of-amoebes (current-number-of-amoebes + 1)
+end
+
+to amoebes::explode
+  ioda:die
+  ask patch-here [
+    sprout-diamonds 1 [init-diamond]
+  ]
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
 566
 10
 936
-293
+401
 -1
 -1
 36.0
@@ -622,7 +663,7 @@ GRAPHICS-WINDOW
 1
 0
 9
--6
+-9
 0
 1
 1
@@ -793,8 +834,8 @@ CHOOSER
 108
 level
 level
-"level0" "level1" "level2" "level3"
-3
+"level0" "level1" "level2" "level3" "level4" "level5"
+5
 
 MONITOR
 287
