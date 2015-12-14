@@ -1,11 +1,11 @@
 [10 10]
 XXXXXXXXXX
-XH.......X
-X.      .X
-X..xxxx  X
+XH.x.....X
+X. x    .X
+X.xxxxxx X
 X.x. ..x X
 X.x. A   X
-X.x. ..x X
-X..xxxx. X
-X....... X
+Xxx. ..x X
+X.xxxxxx X
+X....... O
 XXXXXXXXXX
