@@ -113,3 +113,13 @@ end
 parallel interaction Expense
   actions	expense
 end
+
+parallel interaction InitTransformation
+  condition	evaluate-transformation
+  actions	init-transformation
+end
+
+parallel interaction TransformInRocks
+  condition	can-transform-in-rock?
+  actions	force-transformation-in-rock
+end

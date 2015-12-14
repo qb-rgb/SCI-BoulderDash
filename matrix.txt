@@ -67,3 +67,5 @@ explosive	Explose		 0	UPDATE
 explosive	UpdateExplosive	 0	UPDATE
 
 amoebes		Expense		 50
+amoebes		InitTransformation 50
+amoebes		TransformInRocks 0	UPDATE
