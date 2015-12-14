@@ -973,21 +973,47 @@ NIL
 1
 
 @#$#@#$#@
-## WHAT IS IT?
+## PROJET
 
-This file is a basic implementation of the "Boulder Dash" video game (1984) within the IODA NetLogo extension.
+Ce fichier est une implémentation basique du jeu "Boulder Dash", un jeu-vidéo datant de 1984, en utilisant l'extension IODA pour Netlogo.
 
-## HOW IT WORKS
+## QUEL EST LE BUT?
 
-A cave is initialized in the setup procedure. The main character has to dig the dirt to collect all diamonds initially present without being killed by monsters or falling rocks or diamonds. Agents can move only in their von Neumann neighborhood (4 neighbors). When all diamonds have been collected, the hero must reach the exit that appears in the cave.
+Le personnage principal se trouve dans une grotte, et doit collecter tous les diamants, présents sur la carte, tout en évitant les obstacles comme les monstres, les pierres ou les diamants tombants et roulants.
+Tous les agents ne peuvent se déplacer que dans le voisinage de Von Neumann, c'est à dire : à gauche, à droite, en haut et en bas.
+Quand tous les diamants sont collectés, le joueur devra déplacer le personnage jusqu'à une porte de sortie (qui était alors jusque là cachée), afin de pouvoir valider le niveau et passer à celui suivant.
+Pour aider, le joueur peut déposer de la dynamite, afin de faire exploser des murs et des monstres.
 
+## RÈGLES DU JEU
 
-## HOW TO USE IT
+Voici les règles qui régissent le jeu:
+* le personnage principal creuse la terre en explorant la grotte,
+* le personnage principal peut pousser les pierres se trouvant à sa gauche et à sa droite,
+* les murs sont infranchissables, mais certains peuvent être destruits par une explosion,
+* certains murs sont magiques; ils sont perméables aux pierres et laissent tomber un diamant quand une de ces dernières le franchit,
+* une pierre peut tomber à sa gauche ou à sa droite si aucun obstacle ne se trouve sur son chemin,
+* si une pierre ou un diamant tombe sur le héros, celui-ci meurt,
+* les monstres mangent le héros s'ils le rencontre,
+* quand une explosion se produit, elle se propage dans les cases adjacentes avec une force décroissante, tuant les monstres au passage et pouvant laisser derrière eux des diamants,
+* la porte de sortie apparaît quand le nombre minimal de diamants (présents dans le niveau) est atteint,
+* les amoebes sont des agents immobiles qui peuvent s'étendre tant qu'il n'y a pas d'obstacles à leur portée; s'il y en a un, ils se transformeront tous en diamants - sinon, ils peuvent se transformer aléatoirement en pierre.
 
-You just have to click on **`setup`**, then on **`go`**. Your aim is to endow the character and the other agents with a better behavior than the initial one.
+## COMMENT L'UTILISER?
 
+Sélectionnez le niveau "0", et cliquez sur **`setup`** puis **`go`**.
+Une fois un niveau franchi, le suivant est sélectionné automatiquement.
 
-## HOW TO CITE
+## COMPRÉHENSION DES DIFFÉRENTS NIVEAUX
+
+Il y a 6 niveaux en tout.
+Le **niveau 0** est une introduction au jeu - il concerne principalement le déplacement du joueur, et comprendre un peu mieux comment le jeu est conçu.
+Le **1er niveau** introduit les monstres.
+Le **2ème niveau** met en avant l'opportunité pour le joueur de pousser les pierres afin de pouvoir sortir.
+Le **3ème niveau** permet de comprendre comment fonctionne un agent *magicwall*.
+Le **4ème niveau** permet, lui, de mettre en avant la nécessité de poser des dynamites au bon endroit, afin de terminer le niveau.
+Le **5ème niveau** introduit les amoebes - c'est le niveau le plus compliqué car l'on doit mettre en relation tout ce qui a été vu précédemment pour sortir.
+
+## CONCERNANT L'APPROCHE IODA...
 
   * The **IODA methodology and simulation algorithms** (i.e. what is actually in use in this NetLogo extension):
 Y. KUBERA, P. MATHIEU and S. PICAULT (2011), "IODA: an interaction-oriented approach for multi-agent based simulations", in: _Journal of Autonomous Agents and Multi-Agent Systems (JAAMAS)_, vol. 23 (3), p. 303-343, Springer DOI: 10.1007/s10458-010-9164-z.
@@ -998,6 +1024,7 @@ U. WILENSKY (1999), NetLogo. http://ccl.northwestern.edu/netlogo Center for Conn
 
 ## COPYRIGHT NOTICE
 
+A project by Quentin BAERT and Antonin CARETTE
 All contents &copy; 2008-2015 Sébastien PICAULT and Philippe MATHIEU
 Centre de Recherche en Informatique, Signal et Automatique de Lille (CRIStAL)
 UMR CNRS 9189 -- Université de Lille (Sciences et Technologies)
