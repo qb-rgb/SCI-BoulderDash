@@ -26,6 +26,7 @@ magicwalls-own [ ]
 doors-own     [ open? ]
 blast-own     [ strength diamond-maker? ]
 explosive-own [ limit-before-explosion ]
+amoebes-own [ transform-in-rock ]
 
 to setup
   clear-all
@@ -197,6 +198,7 @@ end
 
 to init-amoebe
   ioda:init-agent
+  set transform-in-rock false
 end
 
 ; primitives that are shared by several breeds
@@ -261,7 +263,6 @@ to doors::change-state
     ]
 end
 
-
 ; diamonds-related primitives
 
 to diamonds::filter-neighbors
@@ -300,8 +301,6 @@ end
 to diamonds::die
   ioda:die
 end
-
-
 
 ; rocks-related primitives
 
@@ -620,7 +619,13 @@ end
 to amoebes::expense
   let add-number-of-amoebes 0
   ask neighbors [
-    if not any? turtles-here [
+    let turtles-neighbors ([breed] of turtles-here)
+    if (not any? turtles-here) or ((first turtles-neighbors = dirt) and (length turtles-neighbors = 1)) [
+      if not empty? turtles-neighbors and first turtles-neighbors = dirt [
+        ask dirt-here [
+          ioda:die
+        ]
+      ]
       sprout-amoebes 1 [init-amoebe]
       set add-number-of-amoebes (add-number-of-amoebes + 1)
     ]
@@ -638,9 +643,39 @@ to amoebes::expense
 end
 
 to amoebes::explode
+  set total-nb-of-amoebes (total-nb-of-amoebes - 1)
   ioda:die
   ask patch-here [
     sprout-diamonds 1 [init-diamond]
+  ]
+end
+
+to-report amoebes::evaluate-transformation
+  report (random 10 = 0)
+end
+
+to-report amoebes::can-transform-in-rock?
+  report transform-in-rock
+end
+
+to amoebes::force-transformation-in-rock
+  set total-nb-of-amoebes (total-nb-of-amoebes - 1)
+  ioda:die
+  ask patch-here [
+    sprout-rocks 1 [init-rock]
+  ]
+end
+
+to amoebes::init-transformation
+  set transform-in-rock true
+  if (random 10 = 7) [
+    ask neighbors [
+      if count amoebes-here > 0 [
+        ask amoebes-here [
+          set transform-in-rock true
+        ]
+      ]
+    ]
   ]
 end
 @#$#@#$#@
