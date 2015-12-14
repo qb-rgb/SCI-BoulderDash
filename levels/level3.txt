@@ -1,6 +1,7 @@
 [10 7]
+1
 XXXXXXXXXX
-XH....RD.X
+XH....R..X
 X..... ..X
 X.....m..O
 X..... ..X

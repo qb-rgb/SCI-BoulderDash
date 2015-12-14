@@ -1,4 +1,5 @@
 [25 25]
+24
 XXXXXXXXXXXXXXXXXXXXXXXXX
 X H                     X
 XXXXXXXXXX              X

@@ -1,9 +1,12 @@
-[10 8]
-XXXXXXXXXX
-XH.......X
-X........X
-X..x..x..X
-X.x....x.X
-X.x....x.X
-X.x....x.X
-XXXXXXXXXX
+[15 10]
+3
+XXXXXXXXXXXXXXX
+X    R    x   X
+XH  RRR   x D X
+X  RRRRR  xxxxX
+X RRRRRRR x   X
+Xxxxxxxxxxx D X
+X    x    xxxxX
+X D  x D  x   O
+X    x    x   X
+XXXXXXXXXXXXXXX
