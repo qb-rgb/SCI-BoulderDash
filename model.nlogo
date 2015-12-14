@@ -45,7 +45,7 @@ to go
   ifelse (not any? heros)
     [ ifelse (countdown = 0) [ user-message "GAME OVER !" stop ] [ set countdown countdown - 1 ]]
     [ if (all? heros [any? doors-here with [open?]])
-        [ user-message "CONGRATULATIONS !"
+        [ user-message "LEVEL FINISHED !"
           ifelse level = "level0" [
             set level "level1"
           ]
@@ -66,6 +66,7 @@ to go
                     set level "level5"
                   ]
                   [
+                    user-message "YOU JUST FINISHED THE GAME! CONGRATULATIONS!"
                     stop
                   ]
                 ]
