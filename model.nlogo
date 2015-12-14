@@ -45,9 +45,37 @@ to go
   ifelse (not any? heros)
     [ ifelse (countdown = 0) [ user-message "GAME OVER !" stop ] [ set countdown countdown - 1 ]]
     [ if (all? heros [any? doors-here with [open?]])
-        [ user-message "CONGRATULATIONS !" stop ]
+        [ user-message "CONGRATULATIONS !"
+          ifelse level = "level0" [
+            set level "level1"
+          ]
+          [
+            ifelse level = "level1" [
+              set level "level2"
+            ]
+            [
+              ifelse level = "level2" [
+                set level "level3"
+              ]
+              [
+                ifelse level = "level3" [
+                  set level "level4"
+                ]
+                [
+                  ifelse level = "level4" [
+                    set level "level5"
+                  ]
+                  [
+                    stop
+                  ]
+                ]
+              ]
+            ]
+          ]
+          init-world
+          setup
+       ]
     ]
-
 end
 
 to read-level [ filename ]
