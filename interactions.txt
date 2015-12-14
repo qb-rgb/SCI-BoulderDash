@@ -80,9 +80,9 @@ parallel interaction ReadOrders
 end
 
 parallel interaction Explode
-  trigger           target:is-destructible?
+  trigger            target:is-destructible?
   condition	     moving?
-  actions 	     create-blast target:die die
+  actions 	     create-blast
 end
 
 parallel interaction Collect
