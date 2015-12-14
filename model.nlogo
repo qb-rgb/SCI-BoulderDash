@@ -1013,6 +1013,24 @@ Le **3ème niveau** permet de comprendre comment fonctionne un agent *magicwall*
 Le **4ème niveau** permet, lui, de mettre en avant la nécessité de poser des dynamites au bon endroit, afin de terminer le niveau.
 Le **5ème niveau** introduit les amoebes - c'est le niveau le plus compliqué car l'on doit mettre en relation tout ce qui a été vu précédemment pour sortir.
 
+## COMMENT CRÉER UN NIVEAU?
+
+Vous avez besoin d'un fichier texte présent dans le répertoire *level* sous la forme : *levelX.txt", où X est un entier suivant le nombre de niveaux déjà présents.
+Vous pouvez créer les différents agents via ces caractères ASCII:
+
+* . : sable,
+* A : amoebe,
+* D : diamant,
+* H : héros du jeu,
+* M : monstre,
+* m : mur "magique", permettant de transformer une pierre en diamant si ce dernier le traverse,
+* O : porte de sortie,
+* R : pierre,
+* X : mur non-destructible,
+* x : mur destructible.
+
+Les 2 premières lignes du fichier concerne la taille du niveau en longueur et en largeur (1ère ligne), et le nombre minimal de diamants à recueillir pour terminer celui-ci (2ème ligne).
+
 ## CONCERNANT L'APPROCHE IODA...
 
   * The **IODA methodology and simulation algorithms** (i.e. what is actually in use in this NetLogo extension):
