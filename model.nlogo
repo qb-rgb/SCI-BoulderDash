@@ -83,6 +83,8 @@ to read-level [ filename ]
   file-open filename
   let s read-from-string file-read-line ; list with width and height
   resize-world 0 (first s - 1)  (1 - last s) 0
+  let d file-read-line
+  set nb-to-collect d
   let x 0 let y 0
   while [(y >= min-pycor) and (not file-at-end?)]
     [ set x 0
