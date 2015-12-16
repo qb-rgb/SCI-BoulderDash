@@ -2,7 +2,7 @@
 3
 XXXXXXXXXXXXXXX
 XE   R    x   X
-XH  RRR   x D X
+XH  RTR   x D X
 X  RRRRR  xxxxX
 X RRRRRRR x   X
 Xxxxxxxxxxx D X

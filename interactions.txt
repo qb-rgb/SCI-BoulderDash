@@ -52,6 +52,11 @@ parallel interaction Advance
   actions	     move-forward
 end
 
+parallel interaction StillInvocated
+  condition	     not:still-invocated?
+  actions	     die
+end
+
 parallel interaction Push
   condition         target-ahead?  moving?  target:nothing-ahead? not:target:moving?
   actions           move-forward target:move-forward
@@ -102,11 +107,12 @@ parallel interaction DiamTransform
 end
 
 parallel interaction Explose
-  condition	can-explose?
+  condition	activated? can-explose?
   actions	explose
 end
 
 parallel interaction UpdateExplosive
+  condition	activated?
   actions	update-shape
 end
 

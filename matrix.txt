@@ -16,8 +16,8 @@
 ; of the line introduces a comment line. Empty lines are ignored.
 ;
 
-
-doors		Open		 0 	UPDATE
+devil		Advance		 10
+devil		StillInvocated	 0	UPDATE
 
 diamonds	StartFalling	 0 	UPDATE
 diamonds	Fall		 0
@@ -30,6 +30,8 @@ diamonds	StopFalling 	 10 	doors		 1
 diamonds	Explode 	 50 	monsters	 1
 diamonds	Explode 	 50 	heros		 1
 
+doors		Open		 0 	UPDATE
+
 rocks		StartFalling	  0 	UPDATE
 rocks		Fall 		        0
 rocks   	RollLeft       	 50
@@ -41,6 +43,7 @@ rocks		StopFalling 	 10 	rocks		 1
 rocks		StopFalling 	 10 	doors		 1
 rocks		Explode 	 50 	monsters	 1
 rocks		Explode 	 50 	heros		 1
+rocks		Explode		 50	ropeway		 1
 rocks		DiamTransform	 0	UPDATE
 
 monsters	Advance		 10

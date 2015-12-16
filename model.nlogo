@@ -2,21 +2,23 @@ __includes ["IODA_2_3.nls"]
 
 extensions [ioda]
 
-breed [walls wall]
-breed [magicwalls magicwall]
-breed [heros hero]
-breed [monsters monster]
-breed [doors door]
-breed [rocks rock]
+breed [amoebes amoebe]
+breed [blast]
+breed [devil]
 breed [diamonds diamond]
 breed [dirt]
+breed [doors door]
 breed [explosive]
-breed [blast]
-breed [amoebes amoebe]
+breed [heros hero]
+breed [magicwalls magicwall]
+breed [monsters monster]
+breed [rocks rock]
+breed [walls wall]
+breed [ropeway]
 
 turtles-own [ destructible? ]
 
-globals       [ score nb-to-collect countdown total-nb-of-amoebes current-number-of-amoebes ]
+globals       [ score nb-to-collect countdown total-nb-of-amoebes current-number-of-amoebes current-number-of-explosives devil-has-been-invocated?]
 heros-own     [ moving? orders ]
 diamonds-own  [ moving? ]
 monsters-own  [ moving? right-handed? ]
@@ -25,8 +27,10 @@ walls-own     [ ]
 magicwalls-own [ ]
 doors-own     [ open? ]
 blast-own     [ strength diamond-maker? ]
-explosive-own [ limit-before-explosion ]
+explosive-own [ is-active? limit-before-explosion ]
 amoebes-own [ transform-in-rock ]
+devil-own [ time-elapsed ]
+ropeway-own [ ]
 
 to setup
   clear-all
@@ -45,7 +49,7 @@ to go
   ifelse (not any? heros)
     [ ifelse (countdown = 0) [ user-message "GAME OVER !" stop ] [ set countdown countdown - 1 ]]
     [ if (all? heros [any? doors-here with [open?]])
-        [ user-message "LEVEL FINISHED !"
+        [ user-message "LEVEL FINISHED!"
           ifelse level = "level0" [
             set level "level1"
           ]
@@ -77,13 +81,18 @@ to go
           setup
        ]
     ]
+    ask devil [
+      set shape "ghost 2"
+      set color white
+      set time-elapsed (time-elapsed - 1)
+    ]
 end
 
 to read-level [ filename ]
   file-open filename
   let s read-from-string file-read-line ; list with width and height
   resize-world 0 (first s - 1)  (1 - last s) 0
-  let d file-read-line
+  let d ( read-from-string file-read-line - 0 )
   set nb-to-collect d
   let x 0 let y 0
   while [(y >= min-pycor) and (not file-at-end?)]
@@ -117,7 +126,12 @@ to create-agent [ char ]
                       [ sprout-dirt 1 [ init-dirt ] ]
                       [ ifelse (char = "A")
                         [ sprout-amoebes 1 [ init-amoebe ] ]
-                        [
+                        [ ifelse (char = "E")
+                          [ sprout-explosive 1 [ init-explosive false ] ]
+                          [ ifelse (char = "T")
+                            [ sprout-ropeway 1 [ init-ropeway ] ]
+                            [ ]
+                          ]
                         ]
                       ]
                     ]
@@ -141,12 +155,15 @@ to init-world
   set-default-shape dirt "dirt"
   set-default-shape blast "star"
   set-default-shape explosive "triangle"
-  set-default-shape amoebes "bug"
+  set-default-shape amoebes "leaf"
+  set-default-shape devil "ghost 2"
+  set-default-shape ropeway "box"
   read-level (word "levels/" level ".txt")
   set countdown 0
-  set nb-to-collect count diamonds
   set total-nb-of-amoebes 0
   set current-number-of-amoebes 0
+  set current-number-of-explosives nb-explosives
+  set devil-has-been-invocated? false
 end
 
 to init-hero
@@ -222,14 +239,28 @@ to init-wall [ d ]
   set color blue - 4
 end
 
-to init-explosive
+to init-explosive [ d ]
   ioda:init-agent
+  set destructible? true
   set limit-before-explosion limit-explosion
+  set is-active? d
 end
 
 to init-amoebe
   ioda:init-agent
+  set destructible? true
   set transform-in-rock false
+end
+
+to init-devil
+  ioda:init-agent
+  set destructible? false
+  set time-elapsed 20
+end
+
+to init-ropeway
+  ioda:init-agent
+  set destructible? true
 end
 
 ; primitives that are shared by several breeds
@@ -498,18 +529,14 @@ to send-message [ value ]
   set orders lput value orders
 end
 
-to heros::put-explosive
-  ask patch-here [
-    sprout-explosive 1 [init-explosive]
-  ]
-end
-
 to heros::filter-neighbors
   ioda:filter-neighbors-in-radius halo-of-hero
 end
 
 to-report heros::nothing-ahead?
   report (default::nothing-ahead? 1) or (any? (doors-on patch-ahead 1) with [ doors::open? ])
+          or (any? (explosive-on patch-ahead 1) with [ not explosive::activated? ])
+          or (any? (ropeway-on patch-ahead 1) with [ ropeway::can-use-it? ])
 end
 
 to-report heros::target-ahead?
@@ -531,18 +558,43 @@ end
 to heros::handle-messages
   foreach orders
     [ let m ?
-      ifelse (m = "EXPLOSIVE")
-        [ ask patch-here [
-            sprout-explosive 1 [init-explosive]
+      ifelse (m = "DEVIL")
+      [
+        if (not devil-has-been-invocated?) and (current-number-of-explosives > 1) [
+          set current-number-of-explosives 1
+          ask patch-here [
+            set devil-has-been-invocated? true
+            sprout-devil 1 [ init-devil ]
+            ask devil-here [
+              set xcor random-pxcor
+              set ycor random-pycor
+            ]
+          ]
         ]
-        ]
-        [
-          ifelse (m = "STOP")
-          [ set moving? false]
-          [ set heading m set moving? true ]
-        ]
+      ]
+      [
+        ifelse (m = "EXPLOSIVE")
+          [ if current-number-of-explosives > 0 [
+              ask patch-here [
+                sprout-explosive 1 [ init-explosive true ]
+              ]
+            set current-number-of-explosives (current-number-of-explosives - 1)
+            ]
+          ]
+          [
+            ifelse (m = "STOP")
+              [ set moving? false]
+              [ set heading m set moving? true ]
+          ]
+      ]
     ]
   set orders []
+end
+
+to heros::teleport
+  let p one-of patches with [ not any? turtles-here]
+  set xcor [pxcor] of p
+  set ycor [pycor] of p
 end
 
 to heros::stop-moving
@@ -560,6 +612,18 @@ end
 
 to heros::move-forward
   default::move-forward
+  if any? explosive-here [
+    set current-number-of-explosives (current-number-of-explosives + 1)
+    ask explosive-here [
+      ioda:die
+    ]
+  ]
+  if any? ropeway-here [
+    ask ropeway-here [
+      ioda:die
+    ]
+    heros::teleport
+  ]
 end
 
 to heros::create-blast
@@ -568,9 +632,57 @@ end
 
 to heros::increase-score
   set score score + 1
-  set nb-to-collect nb-to-collect - 1
+  set nb-to-collect (nb-to-collect - 1)
 end
 
+; Devil
+
+to devil::die
+  ioda:die
+end
+
+to devil::move-forward
+  ifelse any? monsters [
+    face one-of monsters
+  ]
+  [
+    if any? diamonds [
+      face one-of diamonds
+    ]
+  ]
+  default::move-forward
+  if any? dirt-here [
+    ask dirt-here [
+      ioda:die
+    ]
+  ]
+  if any? explosive-here [
+    set current-number-of-explosives (current-number-of-explosives + 1)
+    ask explosive-here [
+      ioda:die
+    ]
+  ]
+  if any? diamonds-here [
+    ask heros [
+      heros::increase-score
+    ]
+    ask diamonds-here [
+      ioda:die
+    ]
+  ]
+end
+
+to-report devil::moving?
+  report true
+end
+
+to-report devil::nothing-ahead?
+  report true
+end
+
+to-report devil::still-invocated?
+  report time-elapsed > 0
+end
 
 ; Walls
 
@@ -623,6 +735,10 @@ to-report blast::is-alive?
 end
 
 ; Explosive
+
+to-report explosive::activated?
+  report is-active?
+end
 
 to-report explosive::can-explose?
   report limit-before-explosion <= 0
@@ -709,12 +825,22 @@ to amoebes::init-transformation
     ]
   ]
 end
+
+; Ropeway
+
+to-report ropeway::is-destructible?
+  report default::is-destructible?
+end
+
+to-report ropeway::can-use-it?
+  report any? ( patches with [ not any? turtles-here] )
+end
 @#$#@#$#@
 GRAPHICS-WINDOW
-566
-10
-936
-401
+745
+19
+1295
+410
 -1
 -1
 36.0
@@ -728,7 +854,7 @@ GRAPHICS-WINDOW
 0
 1
 0
-9
+14
 -9
 0
 1
@@ -738,10 +864,10 @@ ticks
 30.0
 
 BUTTON
-22
-19
-88
-52
+152
+31
+218
+64
 NIL
 setup\n
 NIL
@@ -755,10 +881,10 @@ NIL
 1
 
 BUTTON
-113
-21
-176
-54
+243
+31
+306
+64
 NIL
 go
 T
@@ -772,10 +898,10 @@ NIL
 1
 
 MONITOR
-25
-284
-97
+21
 365
+93
+446
 NIL
 score
 0
@@ -783,10 +909,10 @@ score
 20
 
 SLIDER
-276
-18
-448
-51
+265
+88
+437
+121
 halo-of-hero
 halo-of-hero
 1
@@ -798,10 +924,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-187
-425
-250
-458
+183
+506
+246
+539
 up
 ask heros [ send-message 0 ]
 NIL
@@ -815,10 +941,10 @@ NIL
 1
 
 BUTTON
-186
-502
-251
-535
+182
+583
+247
+616
 down
 ask heros [ send-message 180 ]
 NIL
@@ -832,10 +958,10 @@ NIL
 1
 
 BUTTON
-186
-463
-250
-496
+182
+544
+246
+577
 STOP
 ask heros [ send-message \"STOP\" ]
 NIL
@@ -849,10 +975,10 @@ NIL
 1
 
 BUTTON
-256
-463
-319
-496
+252
+544
+315
+577
 right
 ask heros [ send-message 90 ]
 NIL
@@ -866,10 +992,10 @@ NIL
 1
 
 BUTTON
-118
-463
-181
-496
+114
+544
+177
+577
 left
 ask heros [ send-message -90 ]
 NIL
@@ -883,31 +1009,31 @@ NIL
 1
 
 MONITOR
-112
-284
-278
+108
 365
+274
+446
 diamonds left
 nb-to-collect
-0
+17
 1
 20
 
 CHOOSER
-278
-63
-416
-108
+265
+130
+403
+175
 level
 level
-"level0" "level1" "level2" "level3" "level4" "level5"
-5
+"level0" "level1" "level2" "level3" "level4" "level5" "level6"
+6
 
 MONITOR
-287
-285
-445
+283
 366
+441
+447
 monsters left
 count monsters
 0
@@ -915,10 +1041,10 @@ count monsters
 20
 
 SWITCH
-278
-122
-422
-155
+265
+184
+409
+217
 step-by-step?
 step-by-step?
 0
@@ -926,10 +1052,10 @@ step-by-step?
 -1000
 
 SLIDER
-269
-168
-441
-201
+22
+131
+194
+164
 blast-strength
 blast-strength
 2
@@ -941,10 +1067,10 @@ NIL
 HORIZONTAL
 
 SLIDER
-268
-224
-440
-257
+22
+172
+194
+205
 limit-explosion
 limit-explosion
 45
@@ -956,10 +1082,10 @@ NIL
 HORIZONTAL
 
 BUTTON
-257
-504
-322
-537
+253
+583
+315
+616
 BOOM
 ask heros [ send-message \"EXPLOSIVE\" ]
 NIL
@@ -968,6 +1094,66 @@ T
 OBSERVER
 NIL
 E
+NIL
+NIL
+1
+
+SLIDER
+22
+87
+194
+120
+nb-explosives
+nb-explosives
+2
+10
+2
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+449
+367
+581
+448
+explosives
+current-number-of-explosives
+17
+1
+20
+
+BUTTON
+113
+583
+177
+616
+SUICIDE
+ask heros [ ioda:die ]
+NIL
+1
+T
+OBSERVER
+NIL
+S
+NIL
+NIL
+1
+
+BUTTON
+182
+622
+314
+655
+INVOCATION
+ask heros [ send-message \"DEVIL\" ]
+NIL
+1
+T
+OBSERVER
+NIL
+D
 NIL
 NIL
 1
@@ -1316,6 +1502,15 @@ Circle -1 true false 81 78 56
 Circle -16777216 true false 99 98 19
 Circle -1 true false 155 80 56
 Circle -16777216 true false 171 98 17
+
+ghost 2
+false
+0
+Polygon -7500403 true true 30 165 13 164 -2 149 0 135 -2 119 0 105 15 75 30 75 58 104 43 119 43 134 58 134 73 134 88 104 73 44 78 14 103 -1 193 -1 223 29 208 89 208 119 238 134 253 119 240 105 238 89 240 75 255 60 270 60 283 74 300 90 298 104 298 119 300 135 285 135 285 150 268 164 238 179 208 164 208 194 238 209 253 224 268 239 268 269 238 299 178 299 148 284 103 269 58 284 43 299 58 269 103 254 148 254 193 254 163 239 118 209 88 179 73 179 58 164
+Line -16777216 false 189 253 215 253
+Circle -16777216 true false 102 30 30
+Polygon -16777216 true false 165 105 135 105 120 120 105 105 135 75 165 75 195 105 180 120
+Circle -16777216 true false 160 30 30
 
 house
 false
