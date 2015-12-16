@@ -1168,7 +1168,7 @@ Ce fichier est une implémentation basique du jeu "Boulder Dash", un jeu-vidéo 
 Le personnage principal se trouve dans une grotte, et doit collecter tous les diamants, présents sur la carte, tout en évitant les obstacles comme les monstres, les pierres ou les diamants tombants et roulants.
 Tous les agents ne peuvent se déplacer que dans le voisinage de Von Neumann, c'est à dire : à gauche, à droite, en haut et en bas.
 Quand tous les diamants sont collectés, le joueur devra déplacer le personnage jusqu'à une porte de sortie (qui était alors jusque là cachée), afin de pouvoir valider le niveau et passer à celui suivant.
-Pour aider, le joueur peut déposer de la dynamite, afin de faire exploser des murs et des monstres.
+Pour aider, le joueur peut déposer de la dynamite (2 au minimum), afin de faire exploser des murs et des monstres.
 
 ## RÈGLES DU JEU
 
@@ -1182,7 +1182,9 @@ Voici les règles qui régissent le jeu:
 * les monstres mangent le héros s'ils le rencontre,
 * quand une explosion se produit, elle se propage dans les cases adjacentes avec une force décroissante, tuant les monstres au passage et pouvant laisser derrière eux des diamants,
 * la porte de sortie apparaît quand le nombre minimal de diamants (présents dans le niveau) est atteint,
-* les amoebes sont des agents immobiles qui peuvent s'étendre tant qu'il n'y a pas d'obstacles à leur portée; s'il y en a un, ils se transformeront tous en diamants - sinon, ils peuvent se transformer aléatoirement en pierre.
+* les amoebes sont des agents immobiles qui peuvent s'étendre tant qu'il n'y a pas d'obstacles à leur portée; s'il y en a un, ils se transformeront tous en diamants - sinon, ils peuvent se transformer aléatoirement en pierre,
+* un démon peut être invoqué une et une seule fois par niveau; il se réservera le droit de descendre votre niveau de dynamite à 1, mais vous laissera tous les diamands qu'il rencontre,
+* pour finir, vous pourrez naviguer dans une case vide du niveau (n'importe-laquelle) par l'intermédiaire d'un téléporteur - attention, il ne pourra être utilisé qu'une et une seule fois!
 
 ## COMMENT L'UTILISER?
 
@@ -1198,6 +1200,7 @@ Le **2ème niveau** met en avant l'opportunité pour le joueur de pousser les pi
 Le **3ème niveau** permet de comprendre comment fonctionne un agent *magicwall*.
 Le **4ème niveau** permet, lui, de mettre en avant la nécessité de poser des dynamites au bon endroit, afin de terminer le niveau.
 Le **5ème niveau** introduit les amoebes - c'est le niveau le plus compliqué car l'on doit mettre en relation tout ce qui a été vu précédemment pour sortir.
+Le **6ème niveau** introduit le téléporteur - il s'agit juste du niveau 4 avec cet agent en plus.
 
 ## COMMENT CRÉER UN NIVEAU?
 
@@ -1212,6 +1215,7 @@ Vous pouvez créer les différents agents via ces caractères ASCII:
 * m : mur "magique", permettant de transformer une pierre en diamant si ce dernier le traverse,
 * O : porte de sortie,
 * R : pierre,
+* T : téléporteur,
 * X : mur non-destructible,
 * x : mur destructible.
 
