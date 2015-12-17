@@ -636,7 +636,12 @@ end
 
 to heros::increase-score
   set score score + 1
-  set nb-to-collect (nb-to-collect - 1)
+  let new-nb nb-to-collect - 1
+  ifelse new-nb > 0 [
+    set nb-to-collect new-nb
+  ] [
+    set nb-to-collect 0
+  ]
 end
 
 ; Devil
