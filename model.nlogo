@@ -263,7 +263,7 @@ end
 to init-devil
   ioda:init-agent
   set destructible? false
-  set time-elapsed 20
+  set time-elapsed 10
 end
 
 to init-ropeway
