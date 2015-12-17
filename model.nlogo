@@ -651,18 +651,24 @@ to devil::die
 end
 
 to devil::move-forward
+  if not any? monsters and not any? diamonds [ioda:die]
   ifelse any? monsters [
-    face one-of monsters
+    face min-one-of monsters [distance myself]
   ]
   [
     if any? diamonds [
-      face one-of diamonds
+      face min-one-of diamonds [distance myself]
     ]
   ]
   default::move-forward
+  if any? monsters-here [
+    ask monsters-here [
+      ioda:die
+    ]
+  ]
   if any? dirt-here [
     ask dirt-here [
-      ioda:die
+      set color red + 2
     ]
   ]
   if any? explosive-here [
@@ -848,9 +854,9 @@ to-report ropeway::can-use-it?
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-703
+639
 10
-948
+884
 228
 -1
 -1
@@ -1033,11 +1039,11 @@ nb-to-collect
 CHOOSER
 265
 130
-403
+471
 175
 level
 level
-"level0" "level1" "level2" "level3" "level4" "level5" "level6"
+"0_easy" "1_complex_with_sand" "2_complex_without_sand" "3_demo_magicwall" "4_take_explosive" "5_demo_amoebes" "6_demo_ropeway"
 5
 
 MONITOR
@@ -1071,7 +1077,7 @@ blast-strength
 blast-strength
 2
 5
-3
+2
 1
 1
 NIL
