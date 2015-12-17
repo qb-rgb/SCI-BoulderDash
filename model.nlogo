@@ -573,10 +573,6 @@ to heros::handle-messages
           ask patch-here [
             set devil-has-been-invocated? true
             sprout-devil 1 [ init-devil ]
-            ask devil-here [
-              set xcor random-pxcor
-              set ycor random-pycor
-            ]
           ]
         ]
       ]
