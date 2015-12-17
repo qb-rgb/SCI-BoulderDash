@@ -784,8 +784,10 @@ to amoebes::expense
   if current-number-of-amoebes = total-nb-of-amoebes [
      ask amoebes [
        ioda:die
-       ask patch-here [
-         sprout-diamonds 1 [init-diamond]
+       if not any? rocks-here [
+         ask patch-here [
+           sprout-diamonds 1 [init-diamond]
+         ]
        ]
      ]
   ]
@@ -840,13 +842,13 @@ to-report ropeway::can-use-it?
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-745
-19
-1295
-410
+703
+10
+948
+228
 -1
 -1
-36.0
+18.8
 1
 10
 1
@@ -857,7 +859,7 @@ GRAPHICS-WINDOW
 0
 1
 0
-14
+9
 -9
 0
 1
@@ -1030,7 +1032,7 @@ CHOOSER
 level
 level
 "level0" "level1" "level2" "level3" "level4" "level5" "level6"
-6
+5
 
 MONITOR
 283
