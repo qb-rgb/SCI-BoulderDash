@@ -235,8 +235,11 @@ end
 to init-wall [ d ]
   ioda:init-agent
   set destructible? d
+  ifelse destructible? [
+    set shape "tile stones"
+    set color grey - 1
+  ][ set color blue - 4 ]
   set heading 0
-  set color blue - 4
 end
 
 to init-explosive [ d ]
