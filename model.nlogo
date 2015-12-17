@@ -857,7 +857,7 @@ GRAPHICS-WINDOW
 639
 10
 884
-228
+229
 -1
 -1
 18.8
@@ -1191,22 +1191,34 @@ Pour aider, le joueur peut déposer de la dynamite (2 au minimum), afin de faire
 
 Voici les règles qui régissent le jeu:
 * le personnage principal creuse la terre en explorant la grotte,
-* le personnage principal peut pousser les pierres se trouvant à sa gauche et à sa droite,
-* les murs sont infranchissables, mais certains peuvent être destruits par une explosion,
-* certains murs sont magiques; ils sont perméables aux pierres et laissent tomber un diamant quand une de ces dernières le franchit,
-* une pierre peut tomber à sa gauche ou à sa droite si aucun obstacle ne se trouve sur son chemin,
+* le personnage principal peut pousser les pierres se trouvant à sa gauche et à sa droite si aucun obstacle ne les bloque,
+* les murs sont infranchissables, mais certains peuvent être detruits par une explosion,
+* certains murs sont magiques; ils sont perméables aux pierres et laissent tomber un diamant quand l'une d'elle le franchit,
+* une pierre peut rouler sur sa gauche ou sur sa droite si aucun obstacle ne se trouve sur son chemin,
 * si une pierre ou un diamant tombe sur le héros, celui-ci meurt,
 * les monstres mangent le héros s'ils le rencontre,
-* quand une explosion se produit, elle se propage dans les cases adjacentes avec une force décroissante, tuant les monstres au passage et pouvant laisser derrière eux des diamants,
+* quand une explosion se produit, elle se propage dans les cases adjacentes avec une force décroissante, tuant les monstres au passage. Les monstres tués de cette manière pouvent laisser derrière eux des diamants,
 * la porte de sortie apparaît quand le nombre minimal de diamants (présents dans le niveau) est atteint,
 * les amoebes sont des agents immobiles qui peuvent s'étendre tant qu'il n'y a pas d'obstacles à leur portée; s'il y en a un, ils se transformeront tous en diamants - sinon, ils peuvent se transformer aléatoirement en pierre,
-* un démon peut être invoqué une et une seule fois par niveau; il se réservera le droit de descendre votre niveau de dynamite à 1, mais vous laissera tous les diamands qu'il rencontre,
-* pour finir, vous pourrez naviguer dans une case vide du niveau (n'importe-laquelle) par l'intermédiaire d'un téléporteur - attention, il ne pourra être utilisé qu'une et une seule fois!
+* le personnage principal peut poser des explosifs (touche 'E'). Après la pose de l'explosif, il disposera d'un certain nombre de tics pour echapper au souffle de celle-ci,
+* le personnage principal peut ramasser des explosifs inactifs en marchant dessus,
+* un démon peut être invoqué (touche 'D') une et une seule fois par niveau; il se réservera le droit de ne vous laisser qu'un seul explosif mais laissera au personnage principal tous les diamants qu'il rencontre et tuera les monstres sur son passage,
+* pour finir, le personnage principal pourra naviguer dans une case vide du niveau (n'importe-laquelle) par l'intermédiaire d'un téléporteur - attention, il ne pourra être utilisé qu'une et une seule fois!
+* la vie ne vaut plus le coup d'être minée? Un bouton "SUICIDE" (touche 'S') est à votre disposition...
 
 ## COMMENT L'UTILISER?
 
 Sélectionnez le niveau "0", et cliquez sur **`setup`** puis **`go`**.
 Une fois un niveau franchi, le suivant est sélectionné automatiquement.
+
+## QUELS PARAMÈTRES OFFRE L'INTERFACE?
+
+L'interface contient :
+* Un slider "nb-explosives" qui permet de sélectionner le nombre d'explosifs disponibles pour le mineur au début du niveau,
+* un slider "blast-strength" qui permet de parametrer la force avec laquelle une explosion va se propager,
+* un slider "limit-explosion" qui permet de parametrer la vitesse avec laquelle un explosif posé va exploser,
+* un selecter "level" permet de sélectionner le niveau de jeu,
+* un switch "step-by-step" permet d'activer l'option "pas à pas" qui fera se déplacer le héros d'une case par pression de touche. Autrement, le héros se dirigera en continu dans la direction indiquée jusqu'à ce qu'il rencontre un obstacle ou jusqu'à la pression d'une nouvelle touche direction.
 
 ## COMPRÉHENSION DES DIFFÉRENTS NIVEAUX
 
@@ -1227,6 +1239,7 @@ Vous pouvez créer les différents agents via ces caractères ASCII:
 * . : sable,
 * A : amoebe,
 * D : diamant,
+* E : explosif inactif (peut être ramassé)
 * H : héros du jeu,
 * M : monstre,
 * m : mur "magique", permettant de transformer une pierre en diamant si ce dernier le traverse,
