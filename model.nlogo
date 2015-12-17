@@ -229,7 +229,7 @@ to init-magicwall
   ioda:init-agent
   set destructible? true
   set heading 0
-  set color blue - 4
+  set color blue + 2
 end
 
 to init-wall [ d ]
