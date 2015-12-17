@@ -226,7 +226,7 @@ end
 
 to init-dirt
   ioda:init-agent
-  set destructible? false
+  set destructible? true
   set color brown + 3
 end
 
