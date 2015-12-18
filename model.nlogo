@@ -817,7 +817,7 @@ to amoebes::explode
 end
 
 to-report amoebes::evaluate-transformation
-  report (random 10 = 0)
+  report (random 20 = 0)
 end
 
 to-report amoebes::can-transform-in-rock?
@@ -835,7 +835,7 @@ end
 to amoebes::init-transformation
   if ticks mod 30 = 0 [
     set transform-in-rock true
-    if (random 10 = 7) [
+    if (random 5 = 0) [
       ask neighbors [
         if count amoebes-here > 0 [
           ask amoebes-here [
@@ -858,10 +858,10 @@ to-report ropeway::can-use-it?
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-639
-10
-884
-229
+636
+16
+881
+234
 -1
 -1
 18.8
@@ -1068,7 +1068,7 @@ SWITCH
 217
 step-by-step?
 step-by-step?
-0
+1
 1
 -1000
 
@@ -1203,7 +1203,7 @@ Voici les règles qui régissent le jeu:
 * les monstres mangent le héros s'ils le rencontre,
 * quand une explosion se produit, elle se propage dans les cases adjacentes avec une force décroissante, tuant les monstres au passage. Les monstres tués de cette manière pouvent laisser derrière eux des diamants,
 * la porte de sortie apparaît quand le nombre minimal de diamants (présents dans le niveau) est atteint,
-* les amoebes sont des agents immobiles qui peuvent s'étendre tant qu'il n'y a pas d'obstacles à leur portée; s'il y en a un, ils se transformeront tous en diamants - sinon, ils peuvent se transformer aléatoirement en pierre,
+* les amoebes sont des agents immobiles qui peuvent s'étendre tant qu'il n'y a pas d'obstacles à leur accroissement; s'il y en a un, ils se transformeront tous en diamants - sinon, ils peuvent se transformer aléatoirement en pierre,
 * le personnage principal peut poser des explosifs (touche 'E'). Après la pose de l'explosif, il disposera d'un certain nombre de tics pour echapper au souffle de celle-ci,
 * le personnage principal peut ramasser des explosifs inactifs en marchant dessus,
 * un démon peut être invoqué (touche 'D') une et une seule fois par niveau; il se réservera le droit de ne vous laisser qu'un seul explosif mais laissera au personnage principal tous les diamants qu'il rencontre et tuera les monstres sur son passage,
