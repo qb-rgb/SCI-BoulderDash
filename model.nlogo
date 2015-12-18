@@ -1189,7 +1189,7 @@ Ce fichier est une implémentation basique du jeu "Boulder Dash", un jeu-vidéo 
 Le personnage principal se trouve dans une grotte, et doit collecter tous les diamants, présents sur la carte, tout en évitant les obstacles comme les monstres, les pierres ou les diamants tombants et roulants.
 Tous les agents ne peuvent se déplacer que dans le voisinage de Von Neumann, c'est à dire : à gauche, à droite, en haut et en bas.
 Quand tous les diamants sont collectés, le joueur devra déplacer le personnage jusqu'à une porte de sortie (qui était alors jusque là cachée), afin de pouvoir valider le niveau et passer à celui suivant.
-Pour aider, le joueur peut déposer de la dynamite (2 au minimum), afin de faire exploser des murs et des monstres.
+Pour aider, le joueur peut déposer des explosifs (2 au minimum), afin de faire exploser des murs et des monstres.
 
 ## RÈGLES DU JEU
 
