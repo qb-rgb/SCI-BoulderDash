@@ -731,6 +731,7 @@ to blast::propagate
   ask neighbors [
     if not any? blast-here [
       if any? turtles-here [
+        ask amoebes-here [set total-nb-of-amoebes (total-nb-of-amoebes - 1)]
         ask turtles-here [
           if destructible? [ioda:die]
         ]
@@ -861,7 +862,7 @@ GRAPHICS-WINDOW
 636
 16
 881
-234
+233
 -1
 -1
 18.8
@@ -1068,7 +1069,7 @@ SWITCH
 217
 step-by-step?
 step-by-step?
-1
+0
 1
 -1000
 
@@ -1178,6 +1179,17 @@ D
 NIL
 NIL
 1
+
+MONITOR
+244
+239
+440
+284
+NIL
+total-nb-of-amoebes
+17
+1
+11
 
 @#$#@#$#@
 ## PROJET
