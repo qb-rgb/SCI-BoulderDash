@@ -51,7 +51,7 @@ to go
     [ if (all? heros [any? doors-here with [open?]])
         [ user-message "LEVEL FINISHED!"
           ifelse level = "0_easy" [
-            set level "1_complex_with_sand"
+            set level "2_complex_without_sand"
           ]
           [
             ifelse level = "1_complex_with_sand" [
@@ -164,7 +164,6 @@ to init-world
   set-default-shape devil "ghost 2"
   set-default-shape ropeway "box"
   read-level (word "levels/" level ".txt")
-  set countdown 0
   set total-nb-of-amoebes 0
   set current-number-of-amoebes 0
   set current-number-of-explosives nb-explosives
@@ -379,7 +378,12 @@ to rocks::filter-neighbors
 end
 
 to-report rocks::nothing-below?
-  report default::nothing-below?
+  ifelse any? magicwalls-on patch-at 0 -1 [
+    report true
+  ]
+  [
+    report default::nothing-below?
+  ]
 end
 
 to-report rocks::moving?
@@ -470,7 +474,9 @@ to rocks::transform-in-diam
     sprout-diamonds 1 [init-diamond]
     ask diamonds-here [
       set moving? true
-      diamonds::move-down
+      if diamonds::nothing-below? [
+        diamonds::move-down
+      ]
     ]
   ]
 end
@@ -723,6 +729,16 @@ to magicwalls::die
   ]
 end
 
+to-report magicwalls::any-diamonds-here?
+  report any? diamonds-here
+end
+
+to magicwalls::fall-diamond
+  ask diamonds-here [
+    if diamonds::nothing-below? [diamonds::move-down]
+  ]
+end
+
 ; Blast
 
 to blast::propagate
@@ -861,7 +877,7 @@ end
 GRAPHICS-WINDOW
 636
 16
-881
+925
 233
 -1
 -1
@@ -876,7 +892,7 @@ GRAPHICS-WINDOW
 0
 1
 0
-9
+14
 -9
 0
 1
@@ -1048,8 +1064,8 @@ CHOOSER
 175
 level
 level
-"0_easy" "1_complex_with_sand" "2_complex_without_sand" "3_demo_magicwall" "4_take_explosive" "5_demo_amoebes" "6_demo_ropeway"
-5
+"0_easy" "1_complex_with_sand" "2_complex_without_sand" "3_demo_magicwall" "4_take_explosive" "5_demo_amoebes" "6_demo_ropeway" "7_test"
+4
 
 MONITOR
 283
@@ -1206,20 +1222,20 @@ Pour aider, le joueur peut déposer des explosifs (2 au minimum), afin de faire 
 ## RÈGLES DU JEU
 
 Voici les règles qui régissent le jeu:
-* le personnage principal creuse la terre en explorant la grotte,
-* le personnage principal peut pousser les pierres se trouvant à sa gauche et à sa droite si aucun obstacle ne les bloque,
-* les murs sont infranchissables, mais certains peuvent être detruits par une explosion,
-* certains murs sont magiques; ils sont perméables aux pierres et laissent tomber un diamant quand l'une d'elle le franchit,
+* le personnage principal (heros "person") creuse la terre (dirt "dirt") en explorant la grotte,
+* le personnage principal peut pousser les pierres (rocks "rock") se trouvant à sa gauche et à sa droite si aucun obstacle ne les bloque,
+* les murs (walls "tile brick")  sont infranchissables, mais certains peuvent être detruits (walls "tile stones") par une explosion (blast "star"),
+* certains murs sont magiques (magicwalls "tile brick" de couleur bleu clair); ils sont perméables aux pierres et laissent tomber un diamant (diamonds "diamond") quand l'une d'elle le franchit,
 * une pierre peut rouler sur sa gauche ou sur sa droite si aucun obstacle ne se trouve sur son chemin,
 * si une pierre ou un diamant tombe sur le héros, celui-ci meurt,
-* les monstres mangent le héros s'ils le rencontre,
+* les monstres (monsters "ghost", ou "butterfly") mangent le héros s'ils le rencontre,
 * quand une explosion se produit, elle se propage dans les cases adjacentes avec une force décroissante, tuant les monstres au passage. Les monstres tués de cette manière pouvent laisser derrière eux des diamants,
-* la porte de sortie apparaît quand le nombre minimal de diamants (présents dans le niveau) est atteint,
-* les amoebes sont des agents immobiles qui peuvent s'étendre tant qu'il n'y a pas d'obstacles à leur accroissement; s'il y en a un, ils se transformeront tous en diamants - sinon, ils peuvent se transformer aléatoirement en pierre,
-* le personnage principal peut poser des explosifs (touche 'E'). Après la pose de l'explosif, il disposera d'un certain nombre de tics pour echapper au souffle de celle-ci,
+* la porte de sortie (doors "door-open") apparaît quand le nombre minimal de diamants (présents dans le niveau) est atteint,
+* les amoebes (amoebes "leaf") sont des agents immobiles qui peuvent s'étendre tant qu'il n'y a pas d'obstacles à leur accroissement; s'il y en a un, ils se transformeront tous en diamants - sinon, ils peuvent se transformer aléatoirement en pierre,
+* le personnage principal peut poser des explosifs (explosive "triangle") (touche 'E'). Après la pose de l'explosif, il disposera d'un certain nombre de tics pour echapper au souffle de celle-ci,
 * le personnage principal peut ramasser des explosifs inactifs en marchant dessus,
-* un démon peut être invoqué (touche 'D') une et une seule fois par niveau; il se réservera le droit de ne vous laisser qu'un seul explosif mais laissera au personnage principal tous les diamants qu'il rencontre et tuera les monstres sur son passage,
-* pour finir, le personnage principal pourra naviguer dans une case vide du niveau (n'importe-laquelle) par l'intermédiaire d'un téléporteur - attention, il ne pourra être utilisé qu'une et une seule fois!
+* un démon (devil "ghost 2") peut être invoqué (touche 'D') une et une seule fois par niveau, si le héro peut lui échanger un nombre suffisant d'explosifs (supérieur ou égal à 2); il se réservera le droit de ne laisser au héro un unique explosif mais lui offrira  tous les diamants qu'il rencontre. Il tuera également les monstres sur son passage,
+* pour finir, le personnage principal pourra naviguer dans une case vide du niveau (n'importe-laquelle) par l'intermédiaire d'un téléporteur (ropeway "box") - attention, il ne pourra être utilisé qu'une et une seule fois!
 * la vie ne vaut plus le coup d'être minée? Un bouton "SUICIDE" (touche 'S') est à votre disposition...
 
 ## COMMENT L'UTILISER?

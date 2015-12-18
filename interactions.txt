@@ -129,3 +129,8 @@ parallel interaction TransformInRocks
   condition	can-transform-in-rock?
   actions	force-transformation-in-rock
 end
+
+parallel interaction MoveDiamonds
+  condition  any-diamonds-here?
+  actions   fall-diamond
+end
