@@ -779,31 +779,33 @@ end
 ; Amoebe
 
 to amoebes::expense
-  let add-number-of-amoebes 0
-  ask neighbors [
-    let turtles-neighbors ([breed] of turtles-here)
-    if (not any? turtles-here) or ((first turtles-neighbors = dirt) and (length turtles-neighbors = 1)) [
-      if not empty? turtles-neighbors and first turtles-neighbors = dirt [
-        ask dirt-here [
-          ioda:die
+  if ticks mod 30 = 0 [
+    let add-number-of-amoebes 0
+    ask neighbors [
+      let turtles-neighbors ([breed] of turtles-here)
+      if (not any? turtles-here) or ((first turtles-neighbors = dirt) and (length turtles-neighbors = 1)) [
+        if not empty? turtles-neighbors and first turtles-neighbors = dirt [
+          ask dirt-here [
+            ioda:die
+          ]
+        ]
+        sprout-amoebes 1 [init-amoebe]
+        set add-number-of-amoebes (add-number-of-amoebes + 1)
+      ]
+    ]
+    set total-nb-of-amoebes (total-nb-of-amoebes + add-number-of-amoebes)
+    if current-number-of-amoebes = total-nb-of-amoebes [
+      ask amoebes [
+        ioda:die
+        if not any? rocks-here [
+          ask patch-here [
+            sprout-diamonds 1 [init-diamond]
+          ]
         ]
       ]
-      sprout-amoebes 1 [init-amoebe]
-      set add-number-of-amoebes (add-number-of-amoebes + 1)
     ]
+    set current-number-of-amoebes (current-number-of-amoebes + 1)
   ]
-  set total-nb-of-amoebes (total-nb-of-amoebes + add-number-of-amoebes)
-  if current-number-of-amoebes = total-nb-of-amoebes [
-     ask amoebes [
-       ioda:die
-       if not any? rocks-here [
-         ask patch-here [
-           sprout-diamonds 1 [init-diamond]
-         ]
-       ]
-     ]
-  ]
-  set current-number-of-amoebes (current-number-of-amoebes + 1)
 end
 
 to amoebes::explode
@@ -831,12 +833,14 @@ to amoebes::force-transformation-in-rock
 end
 
 to amoebes::init-transformation
-  set transform-in-rock true
-  if (random 10 = 7) [
-    ask neighbors [
-      if count amoebes-here > 0 [
-        ask amoebes-here [
-          set transform-in-rock true
+  if ticks mod 30 = 0 [
+    set transform-in-rock true
+    if (random 10 = 7) [
+      ask neighbors [
+        if count amoebes-here > 0 [
+          ask amoebes-here [
+            set transform-in-rock true
+          ]
         ]
       ]
     ]
