@@ -51,7 +51,7 @@ to go
     [ if (all? heros [any? doors-here with [open?]])
         [ user-message "LEVEL FINISHED!"
           ifelse level = "0_easy" [
-            set level "2_complex_without_sand"
+            set level "1_complex_with_sand"
           ]
           [
             ifelse level = "1_complex_with_sand" [
@@ -74,16 +74,20 @@ to go
                       set level "6_demo_ropeway"
                     ]
                     [
-                      user-message "YOU JUST FINISHED THE GAME! CONGRATULATIONS!"
-                      stop
+                      ifelse level = "6_demo_ropeway" [
+                        set level "7_hardcore"
+                      ]
+                      [
+                        user-message "YOU JUST FINISHED THE GAME! CONGRATULATIONS!"
+                        stop
+                      ]
                     ]
                   ]
                 ]
               ]
-            ]
-            init-world
-            setup
+           ]
          ]
+         setup
       ]
     ]
     ask devil [
@@ -877,8 +881,8 @@ end
 GRAPHICS-WINDOW
 636
 16
-925
-233
+881
+140
 -1
 -1
 18.8
@@ -892,8 +896,8 @@ GRAPHICS-WINDOW
 0
 1
 0
-14
--9
+6
+-4
 0
 1
 1
@@ -1064,8 +1068,8 @@ CHOOSER
 175
 level
 level
-"0_easy" "1_complex_with_sand" "2_complex_without_sand" "3_demo_magicwall" "4_take_explosive" "5_demo_amoebes" "6_demo_ropeway" "7_test"
-4
+"0_easy" "1_complex_with_sand" "2_complex_without_sand" "3_demo_magicwall" "4_take_explosive" "5_demo_amoebes" "6_demo_ropeway" "7_hardcore"
+0
 
 MONITOR
 283
@@ -1195,17 +1199,6 @@ D
 NIL
 NIL
 1
-
-MONITOR
-244
-239
-440
-284
-NIL
-total-nb-of-amoebes
-17
-1
-11
 
 @#$#@#$#@
 ## PROJET

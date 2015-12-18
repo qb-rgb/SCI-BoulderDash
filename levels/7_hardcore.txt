@@ -1,0 +1,13 @@
+[30 11]
+3
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+X.........x..................X
+XTX..R....x.R.........R .....X
+XH..RER...xRRRR.....RRRRR....X
+XxxRRRRR..xxxxxmmmmmxxxxxmmxxX
+X.RRRRRRR.x..x      ..M..  ..X
+Xxxxxxxxxxx.Dx...............X
+XT ..x.. Txxxx...............X
+Xmmmmxmmmmx.....M..........M.X
+X    x    x..................O
+XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
